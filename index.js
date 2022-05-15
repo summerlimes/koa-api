@@ -113,27 +113,28 @@ router.post('/login', ctx => {
   }
 });
 
-router.post('logout', ctx => {
+router.post('/logout', ctx => {
   if (ctx.session.authenticated === true) {
     ctx.session.authenticated = false;
     ctx.session.id = undefined;
   }
+  ctx.response.status = 200;
 })
 
 router.get('/stats', ctx => {
-    try {
-      console.log(ctx.session);
-      if (!ctx.session?.authenticated || ctx.session.id !== "admin") {
-        throw new Error("Unauthorized");
-      }
-      const data = getData();
-      console.log("here sending data", data);
-      ctx.body = data;
-    } 
-    catch(err) {
-      ctx.response.status = getErrorCode(err);;
-      ctx.response.body = err.message;
+  try {
+    console.log(ctx.session);
+    if (!ctx.session?.authenticated || ctx.session.id !== "admin") {
+      throw new Error("Unauthorized");
     }
+    const data = getData();
+    console.log("here sending data", data);
+    ctx.body = data;
+  } 
+  catch(err) {
+    ctx.response.status = getErrorCode(err);;
+    ctx.response.body = err.message;
+  }
 });
 
 router.post('/message', ctx => {
